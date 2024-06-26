@@ -3,8 +3,7 @@
 # GLEE Model.
 # GLEE: General Object Foundation Model for Images and Videos at Scale (CVPR 2024)
 # https://arxiv.org/abs/2312.09158
-
-
+import os.path
 
 import torch
 import torch.nn.functional as F
@@ -68,27 +67,28 @@ class GLEE_Model(nn.Module):
         
         self.text_encode_type = cfg.MODEL.TEXT.ARCH
         self.early_fusion = cfg.MODEL.EARLYFUSION
-         
+
+        clip_path = cfg.CLIP_PATH
         if cfg.MODEL.TEXT.ARCH == 'clip_frozen':
-            self.tokenizer = CLIPTokenizer.from_pretrained('projects/GLEE/clip_vit_base_patch32') 
+            self.tokenizer = CLIPTokenizer.from_pretrained(clip_path)
             self.tokenizer.add_special_tokens({'cls_token': self.tokenizer.eos_token})
-            self.text_encoder = CLIPTextModel.from_pretrained('projects/GLEE/clip_vit_base_patch32')
+            self.text_encoder = CLIPTextModel.from_pretrained(clip_path)
             self.lang_encoder = None
             for p in self.text_encoder.parameters():
                 p.requires_grad = False
             self.lang_projection = nn.Parameter(torch.rand(cfg.MODEL.LANGUAGE_BACKBONE.LANG_DIM, cfg.MODEL.DIM_PROJ))
         elif cfg.MODEL.TEXT.ARCH == 'clip_unfrozen':
-            self.tokenizer = CLIPTokenizer.from_pretrained('projects/GLEE/clip_vit_base_patch32') 
+            self.tokenizer = CLIPTokenizer.from_pretrained(clip_path)
             self.tokenizer.add_special_tokens({'cls_token': self.tokenizer.eos_token})
-            self.text_encoder = CLIPTextModel.from_pretrained('projects/GLEE/clip_vit_base_patch32')
+            self.text_encoder = CLIPTextModel.from_pretrained(clip_path)
             self.lang_encoder = None
             self.lang_projection = nn.Parameter(torch.rand(cfg.MODEL.LANGUAGE_BACKBONE.LANG_DIM, cfg.MODEL.DIM_PROJ))
             self.text_encode_type = 'clip_frozen'
         elif cfg.MODEL.TEXT.ARCH == 'clip_teacher':
-            self.tokenizer = CLIPTokenizer.from_pretrained('projects/GLEE/clip_vit_base_patch32') 
+            self.tokenizer = CLIPTokenizer.from_pretrained(clip_path)
             self.tokenizer.add_special_tokens({'cls_token': self.tokenizer.eos_token})
-            self.text_encoder = CLIPTextModel.from_pretrained('projects/GLEE/clip_vit_base_patch32')
-            self.text_encoder_teacher = CLIPTextModel.from_pretrained('projects/GLEE/clip_vit_base_patch32')
+            self.text_encoder = CLIPTextModel.from_pretrained(clip_path)
+            self.text_encoder_teacher = CLIPTextModel.from_pretrained(clip_path)
             self.lang_encoder = None
             for p in self.text_encoder_teacher.parameters():
                 p.requires_grad = False
