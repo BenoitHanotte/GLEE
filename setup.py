@@ -139,19 +139,36 @@ def get_model_zoo_configs() -> List[str]:
 # For projects that are relative small and provide features that are very close
 # to detectron2's core functionalities, we install them under detectron2.projects
 PROJECTS = {
-    "detectron2.projects.glee": "projects/GLEE",
+    # "detectron2.projects.glee": "projects/GLEE",
+    # "glee": "projects/GLEE/glee",
+    # "glee.models": "projects/GLEE/glee/models",
+    # "glee.data": "projects/GLEE/glee/data",
+    # "glee.data.datasets": "projects/GLEE/glee/data/datasets",
+    # "glee.backbone": "projects/GLEE/glee/backbone",
+    # "glee.modules": "projects/GLEE/glee/modules",
+    # "glee.utils": "projects/GLEE/glee/utils",
+    **{
+        os.path.relpath(d, "projects/GLEE").replace('/', '.'): d
+        for d in glob.glob("projects/GLEE/glee/**/", recursive=True)
+    },
+    'glee.clip_vit_base_patch32': 'projects/GLEE/clip_vit_base_patch32/',
 }
+print(PROJECTS)
 
 setup(
-    name="detectron2",
+    name="glee",
     version=get_version(),
     author="FAIR",
     url="https://github.com/facebookresearch/detectron2",
     description="Detectron2 is FAIR's next-generation research "
     "platform for object detection and segmentation.",
-    packages=find_packages(exclude=("configs", "tests*")) + list(PROJECTS.keys()),
+    packages=find_packages(exclude=("configs", "tests*", "tools")) + list(PROJECTS.keys()),
     package_dir=PROJECTS,
-    package_data={"detectron2.model_zoo": get_model_zoo_configs()},
+    package_data={
+        "detectron2.model_zoo": get_model_zoo_configs(),
+        # "glee.data.datasets:": glob.glob("projects/GLEE/glee/data/datasets/**/*.json", recursive=True),
+        '': ['*.json', '*.yaml']
+    },
     python_requires=">=3.6",
     install_requires=[
         # These dependencies are not pure-python.

@@ -90,7 +90,7 @@ def load_omnilabel_json(json_file, image_root, dataset_name=None, prompt=None):
     return dataset_dicts
 
 
-omnilabel_object365 = json.load(open('./projects/GLEE/glee/data/datasets/omnilabel_obj365_descriptions.json','rb'))
-omnilabel_coco = json.load(open('./projects/GLEE/glee/data/datasets/omnilabel_coco_descriptions.json','rb'))
-omnilabel_openimages =  json.load(open('./projects/GLEE/glee/data/datasets/omnilabel_openimages_descriptions.json','rb'))
-omnilabel_all =  json.load(open('./projects/GLEE/glee/data/datasets/omnilabel_all_descriptions.json','rb'))
+omnilabel_object365 = json.load(open(os.path.join(os.path.dirname(__file__), 'omnilabel_obj365_descriptions.json'),'rb'))
+omnilabel_coco = json.load(open(os.path.join(os.path.dirname(__file__), 'omnilabel_coco_descriptions.json'),'rb'))
+omnilabel_openimages =  json.load(open(os.path.join(os.path.dirname(__file__), 'omnilabel_openimages_descriptions.json'),'rb'))
+omnilabel_all =  json.load(open(os.path.join(os.path.dirname(__file__), 'omnilabel_all_descriptions.json'),'rb'))
